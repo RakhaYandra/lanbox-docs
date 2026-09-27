@@ -33,5 +33,5 @@ Go code lives in the future `lanbox` repo.
   plus the 11-way README `grep` (mirror the workflow).
 - Release: `git tag vX.Y.Z && git push origin vX.Y.Z` → check Actions green →
   check Release has 11 readable PDFs (`test -s pdf/LANBox-*.pdf`).
-- Never add Go code, binaries, or fixtures here. FSD/SRS/ADR go here later
-  as separate PRs, then join the PDF list.
+- Never add Go code, binaries, or fixtures here. New guides join the PDF
+  list only via workflow + README + AGENTS update in the same PR.

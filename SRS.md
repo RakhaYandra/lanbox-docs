@@ -28,7 +28,7 @@ windows/amd64; one shared LAN; no internet.
 Functional (per PRD FR-01..FR-08, behavior in FSD FS-01..FS-08 — normative
 by reference, not repeated here). External interfaces: UI — vanilla
 HTML/CSS/JS per DESIGN-SYSTEM (4 endpoints consumed); API — JSON over HTTP
-per API-GUIDE (5 endpoints, `{"error"}` convention); hardware — none beyond
+per API-GUIDE (5 file endpoints + 2 share endpoints V2, `{"error"}` convention); hardware — none beyond
 a network interface and disk. Performance: list/info p95 < 100ms
 localhost; transfers near LAN line-rate; memory flat to 5 GB; 2/4/8
 concurrent clients without crash. Design constraints: stdlib-first Go,

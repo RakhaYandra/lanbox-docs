@@ -148,8 +148,8 @@ Actions builds docs PDFs only. Multi-OS GoReleaser pipeline is future.
 
 ## 14. Documentation Plan
 
-This repo is canonical: PRD, ARCHITECTURE, DESIGN-SYSTEM now; FSD, SRS,
-and ADRs arrive as separate PRs. Go code gets godoc on exported symbols.
+This repo is canonical: PRD, ARCHITECTURE, DESIGN-SYSTEM, FSD, SRS, ADRs,
+and guides live here. Go code gets godoc on exported symbols.
 README covers install, usage, and benchmark. Web-to-API contract is guarded
 by tests, not prose.
 

@@ -7,7 +7,7 @@ Deprecated, Superseded.
 
 Status: Accepted.
 
-Context: need an HTTP server for 5 endpoints. Alternatives: Gin (team knows
+Context: need an HTTP server for 5 file endpoints (7 with V2 shares). Alternatives: Gin (team knows
 it from Pulse), chi, stdlib ServeMux. Factors: binary size, dependency
 count, team familiarity, routing needs (flat paths only).
 

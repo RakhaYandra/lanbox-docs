@@ -83,5 +83,6 @@ packages. Docs updated in the same PR as behavior.
 
 `gofmt -l .` (empty), `go vet ./...`, `go test ./...` — all three run in
 the code repo's CI. Optional local pre-commit hook running the same trio.
-Formatter is `gofmt` for Go; `lanbox-web` uses ESLint + Prettier
-(Vite defaults) with `npm run lint` in web CI.
+Formatter is `gofmt` for Go; `lanbox-web` uses oxlint (Vite default,
+`react/rules-of-hooks` error, fetch-on-change exempted) with `npm run lint`
+in web CI.

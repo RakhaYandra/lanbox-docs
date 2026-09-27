@@ -18,11 +18,12 @@ implementation lives in the future `lanbox` repo.
 | [CODE-STYLE-GUIDE.md](CODE-STYLE-GUIDE.md) | Go + minimal JS conventions ([PDF](https://github.com/RakhaYandra/lanbox-docs/releases/latest)) |
 | [DATABASE-GUIDE.md](DATABASE-GUIDE.md) | No-DB state inventory + rationale ([PDF](https://github.com/RakhaYandra/lanbox-docs/releases/latest)) |
 | [API-GUIDE.md](API-GUIDE.md) | Endpoint reference + conventions ([PDF](https://github.com/RakhaYandra/lanbox-docs/releases/latest)) |
+| [IMPLEMENTATION.md](IMPLEMENTATION.md) | Build order, file map, formats, test gates ([PDF](https://github.com/RakhaYandra/lanbox-docs/releases/latest)) |
 | [AGENTS.md](AGENTS.md) | Agent instructions for this repo (markdown only) |
 
 ## PDF
 
-Each `v*` tag triggers the `docs-to-pdf` workflow → all 10 guides upload as
+Each `v*` tag triggers the `docs-to-pdf` workflow → all 11 guides upload as
 **release assets**. Download them on the
 [Releases](../../releases) page. AGENTS and README stay markdown-only.
 
@@ -30,6 +31,7 @@ Each `v*` tag triggers the `docs-to-pdf` workflow → all 10 guides upload as
 
 | Version | Date | Content |
 |---|---|---|
+| v0.4.0 | 2026-09-27 | Added shares API spec + IMPLEMENTATION blueprint + PDFs (11 total) |
 | v0.3.0 | 2026-09-27 | Added FSD, SRS, ADR, SECURITY/CODE/DATABASE/API guides + PDFs (10 total) |
 | v0.2.0 | 2026-09-27 | Expanded per guideline (12 PRD + 11 DS + 16 ARCH sections) |
 | v0.1.0 | 2026-09-27 | Initial release: PRD, ARCHITECTURE, DESIGN-SYSTEM + PDFs |
@@ -37,5 +39,5 @@ Each `v*` tag triggers the `docs-to-pdf` workflow → all 10 guides upload as
 ## Roadmap (docs)
 
 Done: PRD, ARCHITECTURE, DESIGN-SYSTEM, PDF pipeline, AGENTS, FSD, SRS, ADR,
-SECURITY-GUIDE, CODE-STYLE-GUIDE, DATABASE-GUIDE, API-GUIDE.
+SECURITY-GUIDE, CODE-STYLE-GUIDE, DATABASE-GUIDE, API-GUIDE, IMPLEMENTATION.
 Next: code repo `lanbox` implementation.

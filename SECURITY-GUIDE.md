@@ -6,7 +6,8 @@ control does not apply — not omitted by accident.
 ## A. Authentication & Authorization
 
 Method: per-boot 32B random token (`?token=` or `Authorization: Bearer`) +
-optional 6-digit PIN + bind-address config. No passwords, no sessions, no
+6-digit PIN required by default (`X-PIN` or `?pin=`; `serve --pin off`
+disables) + bind-address config. No passwords, no sessions, no
 2FA/MFA, no RBAC/permission matrix (one operator, one privilege level —
 a matrix for one role is theater). Token compared in constant time and
 never logged (query stripped before logging). Restart rotates the token.

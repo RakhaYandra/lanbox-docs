@@ -64,7 +64,7 @@ speed. `lanbox receive` downloads. `lanbox stop` kills via PID file.
 ### FR-06 Pairing and access control
 
 Per-boot random token (`crypto/rand` 32B, `?token=` + `Authorization:
-Bearer`). Optional 6-digit PIN. Bind-address config. Path traversal
+Bearer`). 6-digit PIN required by default (`--pin off` disables). Bind-address config. Path traversal
 rejected (see NFR-04).
 
 ### FR-07 Resume, checksum, temporary shares (V2)

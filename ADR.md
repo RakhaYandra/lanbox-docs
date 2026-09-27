@@ -166,3 +166,27 @@ on pulse-web); Svelte (why not: no team experience); HTMX (why not:
 extra dep, marginal gain over fetch + React state).
 
 Related ADRs: ADR-002, ADR-007, DESIGN-SYSTEM.
+
+## ADR-009: PIN required by default
+
+Status: Accepted. Supersedes ADR-005 (PIN part only — token design stands).
+
+Context: ADR-005 shipped PIN as printed-but-unverified decoration. A secret
+the server never checks is worse than none (false confidence). Alternatives:
+keep optional-unverified, require by default with `--pin off` escape, drop
+PIN entirely.
+
+Decision: PIN verified server-side on every `/api/*` request (`X-PIN` or
+`?pin=`, constant-time compare), required by default; `serve --pin off`
+disables; `--pin <6-digit>` sets a fixed one. CLI (`--pin`/`LANBOX_PIN`)
+and web login screen send it.
+
+Consequences: positive — second factor real; negative — one more value to
+pass around (QR URL carries token, PIN typed separately by design);
+cost — one middleware branch; long-term — unchanged.
+
+Alternatives considered: unverified PIN (why not: theater); PIN inside QR
+URL (why not: photographed-QR risk); drop PIN (why not: token-only auth
+on hostile LANs is thin).
+
+Related ADRs: ADR-005, SECURITY-GUIDE.

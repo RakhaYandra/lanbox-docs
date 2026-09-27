@@ -112,7 +112,10 @@ version kept one minor release; deprecations announced in release notes.
 Token: 32 random bytes, hex, generated per boot, rotated on restart.
 Send as `?token=` (QR flow) or `Bearer` header (CLI). The 5 file endpoints
 plus `POST /shares` require it. `GET /shares/:token` uses the share token
-instead (+ `X-Share-PIN` when set). No scopes — single privilege level.
+instead (+ `X-Share-PIN` when set). PIN: 6 digits, required by default,
+sent as `X-PIN` header or `?pin=` (`serve --pin off` disables; CLI uses
+`--pin` / `LANBOX_PIN`; web login screen stores it in sessionStorage).
+No scopes — single privilege level.
 
 ## G. Error handling
 

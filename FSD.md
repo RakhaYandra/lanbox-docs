@@ -93,7 +93,8 @@ Overview: gate every request without accounts. User flow: 1. server boots,
 generates token, prints PIN; 2. client connects via QR URL (token embedded)
 or types PIN; 3. requests carry token; 4. missing/wrong → 401. Detailed
 spec: token 32 random bytes (`crypto/rand`, hex); accepted via `?token=` or
-`Bearer`; optional 6-digit PIN as second factor; bind address config.
+`Bearer`; 6-digit PIN required by default (sent as `X-PIN` or `?pin=`,
+verified server-side, constant-time compare); bind address config.
 Business rules: token rotates every boot (restart = rotation); never log
 the token (strip query before logging); PIN printed once. Input: token/PIN.
 Output: 200 or 401 `Unauthorized — wrong token`. Validations: constant-time

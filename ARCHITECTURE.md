@@ -53,7 +53,7 @@ Remaining state:
 |---|---|---|
 | Served files | Filesystem root | name, type, size (from `readdir`) |
 | Server identity | PID file | pid, address, dir |
-| Session | In-memory | per-boot token, optional PIN |
+| Session | In-memory | per-boot token, PIN (required by default) |
 | Shares (V2) | In-memory map | share token, path, expiry, PIN flag |
 
 ## 5. API Design
@@ -112,7 +112,7 @@ never import `server` or `cobra`. `filesystem` and `auth` stay stdlib-only
 ## 8. Security Considerations
 
 Threat model: the LAN is not trusted. Layers: per-boot random token,
-optional 6-digit PIN, bind-address config. Filesystem gate:
+6-digit PIN required by default, bind-address config. Filesystem gate:
 `Clean -> Resolve -> Validate inside Root`, rejecting `..`, absolute
 paths, encoded `%2e`, double-encoding, and symlink escape. Uploads: size
 cap plus optional dotfile rejection. Future: TLS, mDNS. Test matrix: each

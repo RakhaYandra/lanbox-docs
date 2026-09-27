@@ -72,10 +72,10 @@ and offers cleanup when the PID is dead.
 
 | Command | Flags / env | Exit codes |
 |---|---|---|
-| `serve` | `--dir --port --host --limit`, `LANBOX_*` | 0 ok, 1 bad dir/port |
+| `serve` | `--dir --port --host --limit --pin`, `LANBOX_*` | 0 ok, 1 bad dir/port/pin |
 | `status` | — (reads PID file) | 0 running, 2 not running |
-| `send <file>` | `--to <addr>`, `LANBOX_TOKEN` | 0 ok, 1 no file/no connect |
-| `receive <url>` | `--out <dir>`, `LANBOX_TOKEN` | 0 ok, 1 no connect |
+| `send <file>` | `--to <addr>`, `LANBOX_TOKEN`, `--pin`/`LANBOX_PIN` | 0 ok, 1 no file/no connect/401 |
+| `receive <path>` | `--from --out --resume`, `LANBOX_TOKEN`, `--pin`/`LANBOX_PIN` | 0 ok, 1 no connect/401 |
 | `stop` | — (kills PID) | 0 ok, 2 not running |
 | `version` | — | 0 |
 

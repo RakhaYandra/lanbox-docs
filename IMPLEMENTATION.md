@@ -9,20 +9,33 @@ FSD/API-GUIDE; this file says what to build first and how to prove it.
 
 ```
 lanbox/
-├── cmd/lanbox/main.go            # cobra root: serve, status, send, receive, stop, version
+├── cmd/lanbox/main.go            # tiny: imports cli, calls Execute() (best practice: no logic in cmd)
 ├── internal/
-│   ├── server/{server.go,routes.go,middleware.go}   # ServeMux, auth, semaphore, slog, --web-dir static
-│   ├── transfer/{upload.go,download.go,progress.go,limit.go,checksum.go}
+│   ├── cli/{root.go,serve.go,version.go}        # cobra (send/receive/status/stop = M2)
+│   ├── server/{server.go,routes.go,middleware.go}   # ServeMux, logging, --web-dir static
+│   ├── transfer/{upload.go,download.go,progress.go} # limit.go, checksum.go = M3
 │   ├── filesystem/{browser.go,path.go}              # gate: Clean -> Resolve -> Validate
-│   ├── discovery/{network.go,qr.go}                 # LAN IP print, QR render
-│   ├── auth/{token.go,pin.go}                       # rand 32B, constant-time compare
+│   ├── discovery/{network.go}                       # qr.go = M2
+│   ├── auth/                                        # stub in M1 (token.go, pin.go = M2)
 │   └── config/{config.go}                           # flags > env > file > defaults
 ├── Makefile  go.mod  README.md  .gitignore
 
+Layout follows go.dev/doc/modules/layout: cmd thin, everything in
+internal, no pkg/ (nothing reusable externally), no utils/ catch-all
+(package names describe what they provide), tests colocated. No Clean
+Architecture layers (delivery/usecase/domain like Pulse) — deliberate:
+one binary, no database (see ADR-003/ADR-007).
+
 lanbox-web/                        # separate repo, React + Vite
-├── src/{App.jsx,api.js,components/{Header,Breadcrumb,FileRow,UploadButton,ProgressBar,Icon}.jsx}
+├── src/{App.jsx,main.jsx,api.js,styles.css}
+├── src/components/{Header,Breadcrumb,FileRow,UploadButton,ProgressBar,Icon}.jsx
 ├── index.html  package.json  vite.config.js  # dev proxy /api -> :8080
+├── eslint.config.js  .prettierrc  .env  .env.example
 └── dist/                          # build output, served by lanbox --web-dir (gitignored)
+
+FE grows to features/ + shared/ only when a second feature lands or files
+exceed ~15 (best practice: colocation first). JSX (team convention);
+TypeScript only if the app outgrows 2 screens.
 ```
 
 Import rule (ARCHITECTURE): `server -> transfer -> filesystem -> stdlib`.

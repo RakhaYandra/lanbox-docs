@@ -23,6 +23,7 @@ DESIGN-SYSTEM PDFs upload as **release assets**. Download them on the
 
 | Version | Date | Content |
 |---|---|---|
+| v0.2.0 | 2026-09-27 | Expanded per guideline (12 PRD + 11 DS + 16 ARCH sections) |
 | v0.1.0 | 2026-09-27 | Initial release: PRD, ARCHITECTURE, DESIGN-SYSTEM + PDFs |
 
 ## Roadmap (docs)

@@ -14,6 +14,8 @@ Go code lives in the future `lanbox` repo.
 ## Rules
 
 - One concept per edit; keep FR/FS IDs stable (never renumber, only append).
+- Guideline section structure is mandatory (PRD 12, DS 11, ARCH 16 sections);
+  new content extends inside sections, never reshuffles them.
 - ASCII diagrams only (must survive xelatex PDF). No emoji in docs.
 - PDFs cover `PRD`, `ARCHITECTURE`, `DESIGN-SYSTEM` only. `README`/`AGENTS`
   stay markdown-only (living docs).

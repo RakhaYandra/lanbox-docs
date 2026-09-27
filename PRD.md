@@ -5,8 +5,8 @@
 LANBox is a local-first file transfer tool built in Go for sharing files
 directly across devices on the same network, without cloud storage or
 external servers. One device runs `lanbox serve`; the rest connect via
-browser or CLI. Single static binary, vanilla web UI embedded, no account,
-no internet required.
+browser or CLI. Single static binary plus a separate React web repo
+(`lanbox-web`), no account, no internet required.
 
 Companion to Pulse (API monitoring): Pulse is networked SaaS-style Go with
 PostgreSQL/Redis/React; LANBox is offline single-binary Go with stdlib HTTP,

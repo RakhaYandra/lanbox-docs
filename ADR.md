@@ -24,7 +24,7 @@ Related ADRs: ADR-002 (UI), ADR-004 (CLI).
 
 ## ADR-002: vanilla HTML/CSS/JS instead of React
 
-Status: Accepted.
+Status: Superseded by ADR-008.
 
 Context: need a phone-first file browser. Alternatives: React+Vite (Pulse
 pattern), HTMX, vanilla. Factors: build step, binary embedding, UI
@@ -139,3 +139,30 @@ Alternatives considered: GoReleaser (why not: release infra before first
 user); Docker (why not: no daemon on the receiving phone).
 
 Related ADRs: ADR-001, ADR-003.
+
+## ADR-008: web in separate lanbox-web repo with React + Vite
+
+Status: Accepted. Supersedes ADR-002 (embedding part only; vanilla-vs-React
+revisited below — ADR-002 stands as history).
+
+Context: UI needs multi-transfer state, progress bars, and error states.
+Alternatives: vanilla embedded (ADR-002), React+Vite separate repo (Pulse
+pattern), Svelte, HTMX. Factors: team knows React+Vite from pulse-web,
+update UI without rebuilding Go, multi-transfer state management.
+
+Decision: separate private repo `lanbox-web` (React + Vite); Go serves the
+built static files via `--web-dir`; dev runs Vite `:5173` proxied to API
+`:8080`.
+
+Consequences: positive — components (`FileRow`, `ProgressBar`), error
+boundaries, `npm run build` testable; UI ships without Go rebuild;
+negative — build step + bundle (~100 KB), two repos to clone; cost — Vite
+scaffold + proxy config; long-term — bundle stays small (4 endpoints, no
+router lib needed).
+
+Alternatives considered: vanilla embedded (why not: hand-managed DOM for 4
+concurrent progress states is error-prone; team already pays React cost
+on pulse-web); Svelte (why not: no team experience); HTMX (why not:
+extra dep, marginal gain over fetch + React state).
+
+Related ADRs: ADR-002, ADR-007, DESIGN-SYSTEM.

@@ -1,7 +1,8 @@
 # LANBox — Implementation Blueprint
 
-Build order, file map, formats, and test gates for the `lanbox` code repo
-(`github.com/RakhaYandra/lanbox`, Go 1.27). Normative behavior lives in
+Build order, file map, formats, and test gates for the code repos:
+`lanbox` (`github.com/RakhaYandra/lanbox`, Go 1.27) and `lanbox-web`
+(React + Vite). Normative behavior lives in
 FSD/API-GUIDE; this file says what to build first and how to prove it.
 
 ## 1. Repo blueprint
@@ -10,14 +11,18 @@ FSD/API-GUIDE; this file says what to build first and how to prove it.
 lanbox/
 ├── cmd/lanbox/main.go            # cobra root: serve, status, send, receive, stop, version
 ├── internal/
-│   ├── server/{server.go,routes.go,middleware.go}   # ServeMux, auth, semaphore, slog
+│   ├── server/{server.go,routes.go,middleware.go}   # ServeMux, auth, semaphore, slog, --web-dir static
 │   ├── transfer/{upload.go,download.go,progress.go,limit.go,checksum.go}
 │   ├── filesystem/{browser.go,path.go}              # gate: Clean -> Resolve -> Validate
 │   ├── discovery/{network.go,qr.go}                 # LAN IP print, QR render
 │   ├── auth/{token.go,pin.go}                       # rand 32B, constant-time compare
 │   └── config/{config.go}                           # flags > env > file > defaults
-├── web/{index.html,app.js,style.css,icons.js}       # go:embed, vanilla
 ├── Makefile  go.mod  README.md  .gitignore
+
+lanbox-web/                        # separate repo, React + Vite
+├── src/{App.jsx,api.js,components/{Header,Breadcrumb,FileRow,UploadButton,ProgressBar,Icon}.jsx}
+├── index.html  package.json  vite.config.js  # dev proxy /api -> :8080
+└── dist/                          # build output, served by lanbox --web-dir (gitignored)
 ```
 
 Import rule (ARCHITECTURE): `server -> transfer -> filesystem -> stdlib`.
@@ -105,4 +110,5 @@ fmt:   gofmt -l .
 ```
 
 CI (code repo, separate from docs-PDF CI): run `fmt` + `vet` + `test` +
-the traversal matrix on every push.
+the traversal matrix on every push. `lanbox-web` CI: `npm run lint` +
+`npm run build` + a smoke check that the 4 endpoints exist in `src/api.js`.

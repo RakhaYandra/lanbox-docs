@@ -15,13 +15,16 @@ abstraction before its third use.
 - Indent tabs, braces same line, double quotes, lines ≤ 100 where readable.
 - Comments explain why, never narrate what; godoc on every exported symbol.
 
-## B. JavaScript (web UI)
+## B. React + Vite (lanbox-web repo)
 
-- `const` default, `let` only for reassignment, never `var`.
-- Arrow functions; `async/await` over raw promises.
-- `fetch` for API, XHR only where upload progress demands it.
-- Escape every filename before DOM insert (`textContent`, never `innerHTML`
-  with data). No framework, no bundler.
+- Functional components + hooks; each DESIGN-SYSTEM component is one file
+  (`FileRow.jsx`, `ProgressBar.jsx`, ...). API calls live in `src/api.js`
+  (`async/await` over raw promises); upload progress via XHR wrapped once.
+- Error boundary at App level; per-transfer errors render inline (see
+  DESIGN-SYSTEM §6 patterns). No `dangerouslySetInnerHTML` with data —
+  React escapes by default.
+- `const` default, never `var`; single quotes in JS/JSX; Vite dev proxy
+  `/api` → `http://localhost:8080` (no hardcoded host in components).
 
 ```js
 // Good
@@ -80,5 +83,5 @@ packages. Docs updated in the same PR as behavior.
 
 `gofmt -l .` (empty), `go vet ./...`, `go test ./...` — all three run in
 the code repo's CI. Optional local pre-commit hook running the same trio.
-Formatter is `gofmt` (no alternative); JS formatted by hand discipline at
-this size (no prettier config until the UI exceeds ~500 lines).
+Formatter is `gofmt` for Go; `lanbox-web` uses ESLint + Prettier
+(Vite defaults) with `npm run lint` in web CI.

@@ -23,10 +23,12 @@ Retention/deletion: N/A beyond the filesystem itself.
 ## C. API Security
 
 Rate limiting: 4-slot transfer semaphore; excess → 429 + `Retry-After`
-(see ADR-006). CORS: same-origin UI served by the binary; no wildcard
-policy. Input validation: 5-pattern path gate (`..`, absolute, `%2e`,
+(see ADR-006). CORS: web UI ships from the separate `lanbox-web` origin;
+allowed origins come from `--web-origin` (default `*` in M1, allowlist in
+M2 alongside auth). Input validation: 5-pattern path gate (`..`, absolute, `%2e`,
 double-encoding, symlink escape → 400); upload size checked pre-write.
-SQL injection: N/A (no database). XSS: filenames HTML-escaped on render.
+SQL injection: N/A (no database). XSS: React escapes by default; no
+`dangerouslySetInnerHTML` with data.
 CSRF: N/A (no cookies/sessions; token is explicit per request). API keys:
 the per-boot token is the key — see §E.
 

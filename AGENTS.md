@@ -1,13 +1,13 @@
 # AGENTS.md — lanbox-docs
 
 Docs-only repo. English is canonical. Source of requirements and design;
-Go code lives in the future `lanbox` repo.
+code lives in `lanbox` (Go) and `lanbox-web` (React).
 
 ## Layout
 
 - `PRD.md` — functional + non-functional requirements (`FR-xx`, `NFR-xx`).
 - `ARCHITECTURE.md` — layers, flows, dependency rule, config, security.
-- `DESIGN-SYSTEM.md` — vanilla web UI contract (tokens, components, API mapping).
+- `DESIGN-SYSTEM.md` — React web UI contract (tokens, components, API mapping).
 - `FSD.md` — per-feature behavior (`FS-01..08` mapped to FR).
 - `SRS.md` — abridged IEEE 830 + traceability matrix.
 - `ADR.md` — single file, one record per decision (`ADR-001..`).

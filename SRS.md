@@ -26,13 +26,13 @@ windows/amd64; one shared LAN; no internet.
 ## 3. Specific requirements
 
 Functional (per PRD FR-01..FR-08, behavior in FSD FS-01..FS-08 — normative
-by reference, not repeated here). External interfaces: UI — vanilla
-HTML/CSS/JS per DESIGN-SYSTEM (4 endpoints consumed); API — JSON over HTTP
+by reference, not repeated here). External interfaces: UI — React
+per DESIGN-SYSTEM (4 endpoints consumed); API — JSON over HTTP
 per API-GUIDE (5 file endpoints + 2 share endpoints V2, `{"error"}` convention); hardware — none beyond
 a network interface and disk. Performance: list/info p95 < 100ms
 localhost; transfers near LAN line-rate; memory flat to 5 GB; 2/4/8
 concurrent clients without crash. Design constraints: stdlib-first Go,
-no framework, ASCII-only docs, single binary. Quality attributes:
+stdlib-first Go, React web in its own repo, ASCII-only docs, single binary. Quality attributes:
 reliability (disconnect-safe, 507 before corruption), availability (serve
 until Ctrl+C), security (token/PIN + path gate per SECURITY-GUIDE).
 

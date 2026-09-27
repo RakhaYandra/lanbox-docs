@@ -1,7 +1,9 @@
 # LANBox — Design System
 
-Vanilla HTML/CSS/JS only (no React, no HTMX). Served embedded from the Go
-binary. Mobile-first: the phone browser is the primary client.
+React + Vite in the separate `lanbox-web` repo (see ADR-008). Tokens and
+component contracts below are framework-agnostic; components ship as React
+(`FileRow`, `Breadcrumb`, `UploadButton`, `ProgressBar`). Mobile-first: the
+phone browser is the primary client.
 
 ## 1. Color Palette
 
@@ -36,10 +38,10 @@ Upload button sticky at bottom on mobile.
 
 ## 4. Icons
 
-Inline SVG, no library (fits the single binary). Stroke 1.5px, 20px box,
-`currentColor`. Set: folder, file, upload-arrow, download-arrow, check, x,
-chevron-right (breadcrumb). New icons go in one `icons.js` as
-`icon-<name>`; never emoji in UI (emoji breaks the xelatex PDF build).
+Inline SVG, no library. Stroke 1.5px, 20px box, `currentColor`. Set:
+folder, file, upload-arrow, download-arrow, check, x, chevron-right
+(breadcrumb). One `src/components/Icon.jsx` (`<Icon name="folder" />`);
+never emoji in UI (emoji breaks the xelatex PDF build).
 
 ## 5. Components
 
@@ -122,7 +124,10 @@ Forbidden: error codespeak (`ERR_XFER_04`), hype words (`instant`), blame.
 ## 11. Contract with code
 
 Implements exactly: `GET /api/v1/info`, `GET /api/v1/files?path=`,
-`GET /api/v1/files/download?path=`, `POST /api/v1/files/upload`.
-Filenames rendered escaped (no raw HTML). Sizes formatted bytes to human
+`GET /api/v1/files/download?path=`, `POST /api/v1/files/upload` against a
+configurable base URL (dev proxy `/api` → `:8080`; prod same-origin via
+`--web-dir`). Auth header `Authorization: Bearer` (M2) from `src/api.js`.
+Filenames rendered escaped (React escapes by default — no
+`dangerouslySetInnerHTML` with data). Sizes formatted bytes to human
 (B/KB/MB/GB, base 1024). Upload limits surface as 507 with the disk-full
 message.

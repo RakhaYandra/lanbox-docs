@@ -2,9 +2,10 @@
 
 ## 1. System Overview
 
-Single Go process, single static binary: HTTP server plus embedded vanilla
-web UI. No database, no cloud, no framework. Three client types hit the
-server directly over the LAN.
+Single Go process, single static binary: HTTP server for the file API.
+The web UI lives in a separate repo (`lanbox-web`, React + Vite) and is
+served as static files via `--web-dir`. No database, no cloud. Three client
+types hit the server directly over the LAN.
 
 ```
                     LAN
@@ -27,7 +28,7 @@ server directly over the LAN.
 | Language | Go 1.27 | — |
 | HTTP | `net/http` + ServeMux | Gin: binary stays small, stdlib is enough |
 | CLI | cobra | Hand-rolled parsing: error-prone for 6 commands |
-| Web UI | Vanilla HTML/CSS/JS via `go:embed` | React: no build step wanted |
+| Web UI | React + Vite in `lanbox-web` repo, static build served via `--web-dir` | Vanilla embed: multi-transfer state is hand-managed; team knows React |
 | Config | Manual env parsing | Viper: one more dep for 3 vars |
 | Rate limit (V2) | `golang.org/x/time/rate` | Custom bucket: clock bugs |
 | Hash (V2) | `crypto/sha256` stdlib | — |
@@ -76,7 +77,10 @@ Base `/api/v1`. Auth: `?token=` or `Authorization: Bearer`. Errors always
 - File service: browser plus path gate.
 - Discovery: LAN IP print plus QR (mDNS is future, not here).
 - CLI: `serve`, `status`, `send`, `receive`, `stop`, `version`.
-- Web UI: consumes the 4 endpoints via `fetch`/XHR.
+- Web UI (separate `lanbox-web` repo, React): consumes the 4 endpoints via
+  `fetch` against a configurable base URL; dev runs Vite `:5173` with
+  `/api` proxied to `:8080`; prod serves the built files via `--web-dir`;
+  CORS from `--web-origin` (default `*` in M1, allowlist in M2 with auth).
 
 ## 7. Data Flow Diagram
 

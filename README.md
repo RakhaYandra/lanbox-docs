@@ -32,6 +32,7 @@ Each `v*` tag triggers the `docs-to-pdf` workflow → all 11 guides upload as
 | Version | Date | Content |
 |---|---|---|
 | v0.6.0 | 2026-09-27 | PIN enforced by default (ADR-009) + web login/shares UI |
+| v0.6.1 | 2026-09-28 | E2E suite location in test plan |
 | v0.5.0 | 2026-09-27 | Web split to lanbox-web (React+Vite, ADR-008) + PDFs (11 total) |
 | v0.4.0 | 2026-09-27 | Added shares API spec + IMPLEMENTATION blueprint + PDFs (11 total) |
 | v0.3.0 | 2026-09-27 | Added FSD, SRS, ADR, SECURITY/CODE/DATABASE/API guides + PDFs (10 total) |

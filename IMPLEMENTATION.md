@@ -112,6 +112,8 @@ run + benchmark notes.
   `count=1024`; 5 GB optional), generated locally, never committed.
 - Gates: `gofmt -l .` empty, `go vet ./...` green, full `go test ./...`
   green.
+- E2E: `lanbox-web/e2e/` (@playwright/test: auth, transfer, reload-resume)
+  boots a real server per spec; CI runs it on push/PR (see e2e.yml).
 
 ## 7. Makefile / CI (code repo)
 

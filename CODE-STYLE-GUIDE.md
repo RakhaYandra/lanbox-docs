@@ -1,6 +1,6 @@
 # LANBox — Code Style Guide
 
-Go-first (the binary), minimal JS (the embedded UI). Ponytail rule: no
+Go-first (the binary), strict TypeScript (the `lanbox-web` repo). Ponytail rule: no
 abstraction before its third use.
 
 ## A. Go rules
@@ -15,20 +15,23 @@ abstraction before its third use.
 - Indent tabs, braces same line, double quotes, lines ≤ 100 where readable.
 - Comments explain why, never narrate what; godoc on every exported symbol.
 
-## B. React + Vite (lanbox-web repo)
+## B. React + Vite + TypeScript (lanbox-web repo)
 
-- Functional components + hooks; each DESIGN-SYSTEM component is one file
-  (`FileRow.jsx`, `ProgressBar.jsx`, ...). API calls live in `src/api.js`
+- Strict TS (`tsc --noEmit` green in CI): typed props per component
+  (`FileRow.tsx`, `ProgressBar.tsx`, ...), shared types in `src/api.ts`
+  (`Entry`, `TransferState`, `UploadRecord`); no explicit `any`
+  (grep gate), `unknown` + narrowing in catch blocks (`HttpError` class).
+- Functional components + hooks; API calls live in `src/api.ts`
   (`async/await` over raw promises); upload progress via XHR wrapped once.
 - Error boundary at App level; per-transfer errors render inline (see
   DESIGN-SYSTEM §6 patterns). No `dangerouslySetInnerHTML` with data —
   React escapes by default.
-- `const` default, never `var`; single quotes in JS/JSX; Vite dev proxy
-  `/api` → `http://localhost:8080` (no hardcoded host in components).
+- `const` default, never `var`; single quotes in TS/TSX; Vite dev proxy
+  `/api` → `https://localhost:8080` (`secure: false` dev only).
 
-```js
+```ts
 // Good
-const listFiles = async (path) => {
+const listFiles = async (path: string): Promise<FileList> => {
   try {
     const res = await fetch(`/api/v1/files?path=${encodeURIComponent(path)}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -42,7 +45,7 @@ const listFiles = async (path) => {
 };
 
 // Bad
-var listFiles = function(path) {
+var listFiles = function(path: string) {
   return fetch('/api/v1/files?path=' + path).then((r) => r.json());
 };
 ```

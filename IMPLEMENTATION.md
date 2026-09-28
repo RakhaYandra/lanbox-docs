@@ -26,16 +26,17 @@ internal, no pkg/ (nothing reusable externally), no utils/ catch-all
 Architecture layers (delivery/usecase/domain like Pulse) — deliberate:
 one binary, no database (see ADR-003/ADR-007).
 
-lanbox-web/                        # separate repo, React + Vite
-├── src/{App.jsx,main.jsx,api.js,styles.css}
-├── src/components/{Header,Breadcrumb,FileRow,UploadButton,ProgressBar,Icon}.jsx
-├── index.html  package.json  vite.config.js  # dev proxy /api -> :8080
-├── eslint.config.js  .prettierrc  .env  .env.example
+lanbox-web/                        # separate repo, React + Vite + TS (strict)
+├── src/{App.tsx,main.tsx,api.ts,styles.css,vite-env.d.ts}
+├── src/components/{Header,Breadcrumb,FileRow,UploadButton,ProgressBar,Icon,Login}.tsx
+├── index.html  package.json  vite.config.ts  tsconfig.json  # proxy /api -> :8080
+├── .oxlintrc.json  .env  .env.example
+├── e2e/{auth,transfer,resume}.spec.js + helpers/  # @playwright/test, JS
 └── dist/                          # build output, served by lanbox --web-dir (gitignored)
 
 FE grows to features/ + shared/ only when a second feature lands or files
-exceed ~15 (best practice: colocation first). JSX (team convention);
-TypeScript only if the app outgrows 2 screens.
+exceed ~15 (best practice: colocation first). Strict TypeScript, no explicit
+`any`; e2e stays JS (runner handles both).
 ```
 
 Import rule (ARCHITECTURE): `server -> transfer -> filesystem -> stdlib`.
@@ -127,4 +128,4 @@ fmt:   gofmt -l .
 
 CI (code repo, separate from docs-PDF CI): run `fmt` + `vet` + `test` +
 the traversal matrix on every push. `lanbox-web` CI: `npm run lint` +
-`npm run build` + a smoke check that the 4 endpoints exist in `src/api.js`.
+`npm run build` + a smoke check that the 4 endpoints exist in `src/api.ts`.

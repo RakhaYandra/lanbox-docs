@@ -32,6 +32,7 @@ Each `v*` tag triggers the `docs-to-pdf` workflow → all 11 guides upload as
 | Version | Date | Content |
 |---|---|---|
 | v0.6.0 | 2026-09-27 | PIN enforced by default (ADR-009) + web login/shares UI |
+| v0.7.2 | 2026-09-28 | Strict TypeScript web migration |
 | v0.7.1 | 2026-09-28 | mDNS advertise + discover (ADR-011) |
 | v0.7.0 | 2026-09-28 | Self-signed TLS always on (ADR-010) |
 | v0.6.1 | 2026-09-28 | E2E suite location in test plan |

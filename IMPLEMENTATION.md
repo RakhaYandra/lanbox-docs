@@ -11,11 +11,11 @@ FSD/API-GUIDE; this file says what to build first and how to prove it.
 lanbox/
 ├── cmd/lanbox/main.go            # tiny: imports cli, calls Execute() (best practice: no logic in cmd)
 ├── internal/
-│   ├── cli/{root.go,serve.go,version.go}        # cobra (send/receive/status/stop = M2)
+│   ├── cli/{root.go,serve.go,version.go,discover.go,...}  # cobra (send/receive/status/stop/share = M2+)
 │   ├── server/{server.go,routes.go,middleware.go}   # ServeMux, logging, --web-dir static
 │   ├── transfer/{upload.go,download.go,progress.go} # limit.go, checksum.go = M3
 │   ├── filesystem/{browser.go,path.go}              # gate: Clean -> Resolve -> Validate
-│   ├── discovery/{network.go}                       # qr.go = M2
+│   ├── discovery/{network.go,qr.go,mdns.go}          # advertise _lanbox._tcp + Browse
 │   ├── auth/                                        # stub in M1 (token.go, pin.go = M2)
 │   └── config/{config.go}                           # flags > env > file > defaults
 ├── Makefile  go.mod  README.md  .gitignore
@@ -77,6 +77,7 @@ and offers cleanup when the PID is dead.
 | `send <file>` | `--to <addr>`, `LANBOX_TOKEN`, `--pin`/`LANBOX_PIN` | 0 ok, 1 no file/no connect/401 |
 | `receive <path>` | `--from --out --resume`, `LANBOX_TOKEN`, `--pin`/`LANBOX_PIN` | 0 ok, 1 no connect/401 |
 | `stop` | — (kills PID) | 0 ok, 2 not running |
+| `discover` | `--timeout` (default 5s) | 0 always (empty = none found) |
 | `version` | — | 0 |
 
 ## 5. Tasks per milestone

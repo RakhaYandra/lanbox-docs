@@ -75,7 +75,8 @@ Base `/api/v1`. Auth: `?token=` or `Authorization: Bearer`. Errors always
   handlers (info, list, upload, download, shares).
 - Transfer manager: progress, cancellation, rate limit, checksum.
 - File service: browser plus path gate.
-- Discovery: LAN IP print plus QR (mDNS is future, not here).
+- Discovery: LAN IP print, QR, plus mDNS `_lanbox._tcp` advertise
+  (`LANBox-<host>-<port>`, TXT presence-only) and `lanbox discover` browse.
 - CLI: `serve`, `status`, `send`, `receive`, `stop`, `version`.
 - Web UI (separate `lanbox-web` repo, React): consumes the 4 endpoints via
   `fetch` against a configurable base URL; dev runs Vite `:5173` with
@@ -116,7 +117,7 @@ Threat model: the LAN is not trusted. Layers: per-boot random token,
 `Clean -> Resolve -> Validate inside Root`, rejecting `..`, absolute
 paths, encoded `%2e`, double-encoding, and symlink escape. Uploads: size
 cap plus optional dotfile rejection. TLS always on (self-signed, ADR-010).
-Future: mDNS. Test matrix: each
+mDNS live (ADR-011); single-subnet only. Test matrix: each
 of the 5 traversal patterns must return 400.
 
 ## 9. Scalability Plan

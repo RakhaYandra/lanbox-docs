@@ -213,3 +213,25 @@ Alternatives considered: user cert (why not: setup friction kills the
 one-command goal); no TLS (why not: secrets in cleartext on shared Wi-Fi).
 
 Related ADRs: ADR-005, ADR-009, SECURITY-GUIDE.
+
+## ADR-011: mDNS via grandcat/zeroconf, advertise + discover
+
+Status: Accepted.
+
+Context: users type IPs or scan QR; nearby servers should list themselves.
+Alternatives: hashicorp/mdns, grandcat/zeroconf, no discovery (QR only).
+Factors: pure Go (no cgo/avahi), maintained, probe-conflict behavior.
+
+Decision: `grandcat/zeroconf`, service `_lanbox._tcp`, instance
+`LANBox-<host>-<port>` (port included — a lost probing conflict renders the
+loser invisible, proven in testing), TXT presence-only (`https=1 ver=1`,
+never the token), `lanbox discover` browse CLI, unpublish on shutdown.
+
+Consequences: positive — zero-config discovery on one subnet; negative —
+one more dep, multicast never crosses routers (documented, not a bug);
+cost — ~90 lines; long-term — unchanged.
+
+Alternatives considered: hashicorp/mdns (why not: older, less maintained);
+no discovery (why not: typing IPs is the friction mDNS removes).
+
+Related ADRs: ADR-007, SECURITY-GUIDE.

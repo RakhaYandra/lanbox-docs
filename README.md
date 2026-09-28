@@ -13,7 +13,7 @@ in `lanbox` (Go API) and `lanbox-web` (React UI).
 | [DESIGN-SYSTEM.md](DESIGN-SYSTEM.md) | React web UI contract — tokens, components ([PDF](https://github.com/RakhaYandra/lanbox-docs/releases/latest)) |
 | [FSD.md](FSD.md) | Functional Specification — per feature, FS-xx IDs ([PDF](https://github.com/RakhaYandra/lanbox-docs/releases/latest)) |
 | [SRS.md](SRS.md) | Abridged IEEE 830 — FR traceability matrix ([PDF](https://github.com/RakhaYandra/lanbox-docs/releases/latest)) |
-| [ADR.md](ADR.md) | Architecture Decision Records — 10 decisions ([PDF](https://github.com/RakhaYandra/lanbox-docs/releases/latest)) |
+| [ADR.md](ADR.md) | Architecture Decision Records — 11 decisions ([PDF](https://github.com/RakhaYandra/lanbox-docs/releases/latest)) |
 | [SECURITY-GUIDE.md](SECURITY-GUIDE.md) | Security for a local single-user tool ([PDF](https://github.com/RakhaYandra/lanbox-docs/releases/latest)) |
 | [CODE-STYLE-GUIDE.md](CODE-STYLE-GUIDE.md) | Go + minimal JS conventions ([PDF](https://github.com/RakhaYandra/lanbox-docs/releases/latest)) |
 | [DATABASE-GUIDE.md](DATABASE-GUIDE.md) | No-DB state inventory + rationale ([PDF](https://github.com/RakhaYandra/lanbox-docs/releases/latest)) |
@@ -32,6 +32,7 @@ Each `v*` tag triggers the `docs-to-pdf` workflow → all 11 guides upload as
 | Version | Date | Content |
 |---|---|---|
 | v0.6.0 | 2026-09-27 | PIN enforced by default (ADR-009) + web login/shares UI |
+| v0.7.1 | 2026-09-28 | mDNS advertise + discover (ADR-011) |
 | v0.7.0 | 2026-09-28 | Self-signed TLS always on (ADR-010) |
 | v0.6.1 | 2026-09-28 | E2E suite location in test plan |
 | v0.5.0 | 2026-09-27 | Web split to lanbox-web (React+Vite, ADR-008) + PDFs (11 total) |

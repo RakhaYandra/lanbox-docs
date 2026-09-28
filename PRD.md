@@ -159,6 +159,6 @@ single binary ships.
 ## 12. Out of Scope
 
 v0.1 excludes: full CLI client, authentication. V2 excludes: mDNS
-auto-discovery, TLS (future, not a blocker). Never: user accounts, database
+auto-discovery (future). TLS always on, self-signed (see ADR-010). Never: user accounts, database
 server, cloud storage, sync, collaboration, public internet sharing, file
 editing, device management.

@@ -16,7 +16,10 @@ never logged (query stripped before logging). Restart rotates the token.
 
 At rest: files served as-is, no encryption (operator's disk is the trust
 boundary; OS-level encryption is the documented answer if needed). In
-transit: plain HTTP on the LAN; TLS is future work (see ARCHITECTURE),
+transit: HTTPS with a per-boot self-signed cert (ECDSA P-256, 24h, SANs for
+LAN IP + localhost, TLS 1.2+). First-connect TOFU: match the console
+fingerprint; it rotates every restart. CLI skips chain verification
+(auth is token + PIN, not PKI); browsers need one click-through.
 not MVP. Classification: served files are user-owned; no service-collected
 data. PII/GDPR: no accounts, no telemetry, nothing to retain or delete.
 Retention/deletion: N/A beyond the filesystem itself.
@@ -38,7 +41,8 @@ the per-boot token is the key — see §E.
 Cloud/VPC/DDoS/firewall-rules-as-code: N/A (no public server; the binary
 runs on the user's device). Practical hardening: bind `127.0.0.1` for
 loopback-only use; prefer trusted Wi-Fi; OS firewall may restrict port
-8080. No certificates to manage until TLS lands.
+8080. Certificates are generated per boot in memory — nothing to manage,
+nothing on disk; restart rotates cert, token, and PIN together.
 
 ## E. Secrets Management
 

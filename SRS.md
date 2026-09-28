@@ -7,7 +7,8 @@ FSD functions (`FS-xx`) and a verification method (§7 table).
 
 Scope: LANBox v0.1-v0.3 — serve, browse, upload, download, CLI transfer,
 token/PIN, resume/checksum/shares/limit. Out of scope: accounts, database
-server, cloud, sync, mDNS, TLS (see PRD §12). Audience: developers and QA
+server, cloud, sync, mDNS (see PRD §12). HTTPS always on, self-signed
+(ADR-010). Audience: developers and QA
 implementing the Go binary. References: PRD, ARCHITECTURE, DESIGN-SYSTEM,
 FSD, ADR, API-GUIDE, SECURITY-GUIDE.
 

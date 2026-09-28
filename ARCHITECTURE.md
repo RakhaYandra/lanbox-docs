@@ -115,7 +115,8 @@ Threat model: the LAN is not trusted. Layers: per-boot random token,
 6-digit PIN required by default, bind-address config. Filesystem gate:
 `Clean -> Resolve -> Validate inside Root`, rejecting `..`, absolute
 paths, encoded `%2e`, double-encoding, and symlink escape. Uploads: size
-cap plus optional dotfile rejection. Future: TLS, mDNS. Test matrix: each
+cap plus optional dotfile rejection. TLS always on (self-signed, ADR-010).
+Future: mDNS. Test matrix: each
 of the 5 traversal patterns must return 400.
 
 ## 9. Scalability Plan

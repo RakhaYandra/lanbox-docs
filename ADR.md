@@ -190,3 +190,26 @@ URL (why not: photographed-QR risk); drop PIN (why not: token-only auth
 on hostile LANs is thin).
 
 Related ADRs: ADR-005, SECURITY-GUIDE.
+
+## ADR-010: self-signed TLS always on
+
+Status: Accepted.
+
+Context: LAN traffic was plain HTTP; token/PIN in cleartext invites passive
+sniffing. Alternatives: no TLS (status quo), user-supplied cert+key,
+per-boot self-signed. Factors: zero-setup goal, no PKI on a LAN, phone
+browsers, restart-rotated secrets already.
+
+Decision: ECDSA P-256 self-signed cert per boot (SANs: LAN IP + localhost,
+24h validity, TLS 1.2+, in-memory only); console prints the SHA-256
+fingerprint for TOFU; all URLs/QR are https; CLI skips chain verification.
+
+Consequences: positive — passive sniffing dead, zero setup, rotation free
+with restart; negative — browser click-through warning, CLI cannot detect
+MITM (token/PIN remain the real auth); cost — ~60 lines stdlib; long-term —
+user-supplied cert flag if anyone needs clean browsers (record new ADR).
+
+Alternatives considered: user cert (why not: setup friction kills the
+one-command goal); no TLS (why not: secrets in cleartext on shared Wi-Fi).
+
+Related ADRs: ADR-005, ADR-009, SECURITY-GUIDE.

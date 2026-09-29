@@ -44,11 +44,13 @@ Errors: 400 `Invalid path`, 401, 404 `Not found`.
 
 ### GET /api/v1/files/download?path=/report.pdf
 
-Description: stream file bytes. Auth: token required. Headers (V2):
+Description: stream file bytes. Auth: token required. Headers:
 `Range: bytes=858993459-` resumes. Response (200): binary with
-`Content-Length`; (206) partial for Range.
+`Content-Length`; (206) partial for Range. Query `preview=1`: inline
+display (`Content-Disposition: inline`, allowlisted types only, 20 MB cap
+else 413).
 
-Errors: 400, 401, 404, 416 `Range not satisfiable`.
+Errors: 400, 401, 404, 413 `Too large to preview`, 416 `Range not satisfiable`.
 
 ### POST /api/v1/files/upload
 
@@ -65,7 +67,7 @@ Rate limit: counts toward the 4 transfer slots.
 
 ### DELETE /api/v1/files?path=/report.pdf
 
-Description: delete (optional in MVP, server may disable). Auth: token
+Description: delete a file (directories rejected). Auth: token
 required. Response (200): `{"deleted": "/report.pdf"}`. Errors: 400, 401,
 404.
 
@@ -76,9 +78,10 @@ required.
 
 Request:
 ```json
-{"path": "/report.pdf", "expires_minutes": 30, "pin_required": false}
+{"path": "/report.pdf", "expires_minutes": 30, "pin_required": false, "allow_upload": false}
 ```
-(`expires_minutes` 1–1440, default 30.)
+(`expires_minutes` 1–1440, default 30. `allow_upload` needs a directory
+path and turns the share into an expiring inbox.)
 
 Response (201 Created):
 ```json
@@ -95,6 +98,31 @@ Description: download via share link. Auth: the share token IS the auth
 Response (200): binary stream (same bytes as the file). Errors: 401
 `Wrong share PIN`, 404 `Share expired or not found` (expired and missing
 share the same 404 — no expiry oracle).
+
+### POST /api/v1/shares/:token/files
+
+Description: guest upload into an upload share (no server token needed;
+share token is in the path). Auth: `X-Share-PIN` when set. Request:
+multipart field `file`. Response (201): `{name, checksum}`.
+
+Errors: 400, 401 `Wrong share PIN`, 404, 507.
+
+### GET /api/v1/transfers
+
+Description: list in-flight transfers (registry, not the 4-slot queue —
+excess still 429s). Auth: token required. Response (200):
+`{"transfers": [{id, name, bytes, total, started_at}]}`.
+
+### DELETE /api/v1/transfers/:id
+
+Description: cancel an in-flight transfer. Auth: token required. Response
+(200): `{"cancelled": "<id>"}`. Errors: 401, 404.
+
+### GET /api/v1/history?limit=20&offset=0
+
+Description: persistent transfer log (SQLite, 90-day retention). Auth:
+token required. Response (200):
+`{"entries": [{id, name, kind, size, duration_ms, sha256, status, finished_at}]}`.
 
 ## D. Common patterns
 
@@ -157,3 +185,4 @@ curl -H "Authorization: Bearer $LANBOX_TOKEN" \
 | v1 (initial) | info, list, download, upload, delete |
 | v1 + resume (V2) | `Range` on download, `checksum` on upload |
 | v1 + shares (V2) | `POST /shares` (expiry 1m–24h, optional PIN), `GET /shares/:token` (share-token auth, expired → 404, server clock wins) |
+| v1 + extras | `?preview=1` inline (20 MB cap), `POST /shares/:token/files` upload inbox, `GET/DELETE /transfers[/:id]`, `GET /history`, `serve --drop` |

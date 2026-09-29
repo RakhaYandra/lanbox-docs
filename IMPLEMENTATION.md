@@ -24,7 +24,7 @@ Layout follows go.dev/doc/modules/layout: cmd thin, everything in
 internal, no pkg/ (nothing reusable externally), no utils/ catch-all
 (package names describe what they provide), tests colocated. No Clean
 Architecture layers (delivery/usecase/domain like Pulse) — deliberate:
-one binary, no database (see ADR-003/ADR-007).
+one binary, embedded SQLite for history only (see ADR-012/ADR-007).
 
 lanbox-web/                        # separate repo, React + Vite + TS (strict)
 ├── src/{App.tsx,main.tsx,api.ts,styles.css,vite-env.d.ts}

@@ -235,3 +235,27 @@ Alternatives considered: hashicorp/mdns (why not: older, less maintained);
 no discovery (why not: typing IPs is the friction mDNS removes).
 
 Related ADRs: ADR-007, SECURITY-GUIDE.
+
+## ADR-012: SQLite for transfer history (embedded, not a server)
+
+Status: Accepted. Revisits ADR-003 (no database) — narrows it, does not
+repeal it: still no database *server*, no query load, no relations.
+
+Context: transfer history must survive restarts; in-memory dies with the
+process. Alternatives: JSONL log file, SQLite via modernc (pure Go),
+SQLite via mattn (cgo), no history.
+
+Decision: `modernc.org/sqlite` (pure Go — mattn needs cgo and breaks the
+windows/darwin cross-compile matrix), one table `transfers`, WAL mode,
+90-day retention prune on write, best-effort wiring (server runs without
+history if the DB cannot open).
+
+Consequences: positive — persistent history, single file, zero ops;
+negative — +~15 MB binary, one more dep; cost — small package with schema
+v1 inline; long-term — schema changes need migration code (none yet).
+
+Alternatives considered: JSONL (why not: no paging, concurrent-write
+pain); mattn/go-sqlite3 (why not: cgo kills cross builds); no history
+(why not: the requested feature).
+
+Related ADRs: ADR-003, ADR-007, DATABASE-GUIDE.

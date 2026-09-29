@@ -4,7 +4,8 @@
 
 Single Go process, single static binary: HTTP server for the file API.
 The web UI lives in a separate repo (`lanbox-web`, React + Vite) and is
-served as static files via `--web-dir`. No database, no cloud. Three client
+served as static files via `--web-dir`. Embedded SQLite for history only;
+no database server, no cloud. Three client
 types hit the server directly over the LAN.
 
 ```
@@ -35,7 +36,8 @@ types hit the server directly over the LAN.
 | QR (V2) | One small QR lib | Hand-rolled QR: out of scope |
 | Docs PDF | pandoc/latex (build-time only) | — |
 
-No database, no Redis — deliberate difference from Pulse.
+No database server, no Redis — deliberate difference from Pulse.
+Transfer history lives in embedded SQLite (ADR-012).
 
 ## 3. Infrastructure
 
@@ -46,7 +48,8 @@ at `~/.local/share/lanbox/lanbox.pid`. Default port 8080, default bind
 
 ## 4. Database Schema
 
-No database — explicit. File data stays as files (nothing to query).
+No database server — explicit. File data stays as files (nothing to query);
+transfer history is the one exception, in embedded SQLite (ADR-012).
 Remaining state:
 
 | State | Where | Columns |

@@ -1,61 +1,64 @@
 # LANBox — Database Guide
 
-There is no database — by decision (ADR-003), not by omission. This guide
-records what stands in for a schema, which guideline sections are N/A and
-why, and the path back if persistence is ever needed.
+One embedded database for one purpose: transfer history (ADR-012, narrowing
+ADR-003 — still no database *server*). Everything else remains files,
+PID file, and process memory as before.
 
 ## A. Database selection
 
-None. Rationale: the data is files, the query is `readdir`, there are no
-relations, no concurrent writers beyond the transfer semaphore, and one
-operator. A schema for four rows of state would be overhead with zero
-reads to optimize.
+`modernc.org/sqlite` (pure Go — cgo would break the windows/darwin
+cross-compile matrix). One file: `~/.local/share/lanbox/transfers.db`.
+WAL mode, single writer (the server process). History is best-effort:
+if the DB cannot open, the server logs a warning and runs without it.
 
-## B. Schema design (state inventory instead of ERD)
+## B. Schema design
 
-| State | Where | Fields |
-|---|---|---|
-| Served files | Filesystem root (`--dir`) | name, type, size (from OS) |
-| Server identity | PID file `~/.local/share/lanbox/lanbox.pid` | pid, address, dir |
-| Session | Process memory | per-boot token, PIN flag |
-| Shares (V2) | Process memory map | share token, path, expiry, PIN flag |
+```sql
+transfers(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT, kind TEXT,          -- kind: upload | download
+  size INTEGER, duration_ms INTEGER,
+  sha256 TEXT, status TEXT,      -- status: completed | cancelled
+  finished_at DATETIME
+);
+CREATE INDEX idx_transfers_finished ON transfers(finished_at DESC);
+```
 
-Root conventions: served names pass through unchanged (no renaming);
-anything failing the path gate is rejected, never sanitized into a new
-name. PID file is rewritten on boot, removed on clean shutdown, treated
-as stale if the PID is dead.
+Naming: table plural snake_case, columns snake_case — matching this guide's
+conventions from day one. No relations (one table by design).
+
+Non-DB state (unchanged): served files (filesystem root), server identity
+(PID file), session token + PIN (memory), shares (memory map).
 
 ## C. Data types
 
-N/A (no columns). Working equivalents: sizes are `int64` bytes, times are
-server-clock Unix seconds (expiry), tokens are 32 random bytes hex-encoded.
+Sizes `INTEGER` bytes, times RFC 3339 text (server clock wins), hashes hex
+text, `kind`/`status` constrained by code (not ENUM — SQLite has none;
+invalid values rejected in `Record` callers by construction).
 
 ## D. Indexing strategy
 
-N/A (no queries to index). Equivalent performance control: directory
-listings paginate past 1000 entries (cursor `offset`, see API-GUIDE), and
-lookups are single `stat` calls, not scans.
+One index on `finished_at DESC` (the only sort order). Reads paginate
+(`LIMIT ?, OFFSET ?`, default 20, max 200). No full scans in normal use.
 
 ## E. Relationships
 
-N/A (no tables, no joins). Share-to-file is a pointer, not a relation:
-deleting the file invalidates the share (404), deleting the share never
-touches the file.
+N/A (one table, no joins). History rows never reference live files:
+deleting a file leaves its history (an honest record, not an oracle).
 
 ## F. Performance
 
-Stream everything (`io.Copy`); never load a whole file. Cap concurrency at
-4 (ADR-006). No cache layer — the OS page cache is the cache. Pre-write
-disk check returns 507 before a partial lands.
+Writes are one INSERT per finished transfer plus a retention DELETE —
+negligible next to file I/O. No cache layer, no pooling (single writer).
 
 ## G. Migration strategy
 
-N/A (no schema to version). If shares ever need to survive restarts: add
-SQLite via a new ADR, one table (`shares`), WAL mode, zero-downtime
-trivially satisfied (single writer, migration at boot).
+Schema v1 inline in `Open` (`CREATE TABLE IF NOT EXISTS`). No migrations
+yet; when v2 arrives: version table + sequential upgrades at boot,
+zero-downtime trivially satisfied (single writer, migration at boot).
 
 ## H. Monitoring & maintenance
 
-Watch disk space (the 507 path must trigger before the disk fills, not
-after). No VACUUM/ANALYZE (no engine). PID file hygiene: stale detection
-on `status`. Logs rotate via the OS; the binary never manages retention.
+Retention: 90 days, pruned on every write. Disk: history negligible vs
+media files (the 507 path guards the data dir, not the DB). No VACUUM
+schedule (WAL + tiny DB); PID-file hygiene and log rotation unchanged.
